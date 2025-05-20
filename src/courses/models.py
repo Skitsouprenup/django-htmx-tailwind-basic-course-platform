@@ -10,6 +10,7 @@ from utils import cloudinary_utils as cl_utils
 class Course(models.Model):
 
     title = models.CharField(max_length=120)
+    public_id = models.CharField(max_length=150, default="", null=True)
     # 'blank=True' means this field in a view, can have
     # empty value. 'null=True' means that this field in database,
     # can have null values.
@@ -27,7 +28,7 @@ class Course(models.Model):
 
     # Use this to upload images directly to your server.
     # Development only.
-    #def img_upload(instance, filename):
+    # def img_upload(instance, filename):
     #    return f"{filename}"
     #image = models.ImageField(upload_to=img_upload)
 
@@ -41,10 +42,18 @@ class Course(models.Model):
     )
 
     # auto_now_add only happens one time; once a new column is
-    # is created. If you already have record in your database, django
-    # will ask you to assign a default value for this field in those record.
-    created_at = models.DateTimeField(auto_now_add=True, default=timezone.now)
+    # is created. If you already have record in your database use
+    # the 'default' parameter.
+    created_at = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
+
+    # This function is called by django when we insert 
+    # a record to our database. We can override it and insert
+    # some tasks before calling the original save() function.
+    def save(self, *args, **kwargs):
+        if self.public_id == "" and self.public_id is None:
+            self.public_id = cl_utils.generate_public_id(self)
+        super().save(*args, **kwargs)
 
     @property
     def is_published(self):
@@ -61,6 +70,7 @@ class Course(models.Model):
         url = self.image.build_url(**options)
         return url
 
+    @property
     def get_thumbnail(self, as_html=False, width=300):
         if not self.image:
             return ""
@@ -95,8 +105,10 @@ class Lesson(models.Model):
     )
 
     order = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
+
+    # Special class that is recognized by django.
     class Meta:
         # '-' before the name means 'reverse' order.
         # '-updated' is a second sort option if two
