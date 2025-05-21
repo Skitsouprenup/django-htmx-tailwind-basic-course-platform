@@ -32,13 +32,23 @@ class Course(models.Model):
     #    return f"{filename}"
     #image = models.ImageField(upload_to=img_upload)
 
+    @property
+    def get_display_name(self):
+        if self.title:
+            return self.title
+        
+        # __class__ returns a reference for the current model
+        # __name__ returns the class name
+        model_name = self.__class__.__name__
+        return f"${model_name} Course"
+
     #Use this to upload images to cloudinary.
     image = CloudinaryField(
         "image", 
         null=True, 
         public_id_prefix=cl_utils.get_public_id_prefix,
-        display_name=cl_utils.get_display_name,
-        tags= ['course', 'thumbnail']
+        display_name=get_display_name,
+        tags= ['course', 'thumbnail', 'image']
     )
 
     # auto_now_add only happens one time; once a new column is
@@ -50,50 +60,56 @@ class Course(models.Model):
     # This function is called by django when we insert 
     # a record to our database. We can override it and insert
     # some tasks before calling the original save() function.
+    # *args and **kwargs parameters are optional
     def save(self, *args, **kwargs):
-        if self.public_id == "" and self.public_id is None:
+        if self.public_id == "" or self.public_id is None:
             self.public_id = cl_utils.generate_public_id(self)
         super().save(*args, **kwargs)
+
+    @property
+    def path(self):
+        return f"/courses/{self.public_id}"
+
+    @property
+    def get_absolute_url(self):
+        return self.path
 
     @property
     def is_published(self):
         return self.status() == PublishStatus.PUBLISHED
     
-    @property
-    def image_view_admin(self):
-        if not self.image:
-            return ""
-        options = {
-            "width": 300,
-        }
-
-        url = self.image.build_url(**options)
-        return url
-
-    @property
-    def get_thumbnail(self, as_html=False, width=300):
-        if not self.image:
-            return ""
-        options = {
-            "width": width,
-        }
-
-        if(as_html):
-            return self.image.image(**options)
-
-        url = self.image.build_url(**options)
-        return url
-    
 
 class Lesson(models.Model):
+
+    @property
+    def get_display_name(self):
+        return f"{self.title} = {self.course_foreign.get_display_name()}"
+
     #This variable will generate the 'course_id' column in the
     #database. Thus, you can't use the name to declare a new
     #field in this class.
     course_foreign = models.ForeignKey(Course, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
+    public_id = models.CharField(max_length=150, default="", null=True)
     description = models.TextField(blank=True, null=True)
-    thumbnail = CloudinaryField('image', blank=True, null=True)
-    video = CloudinaryField('video', blank=True, null=True, resource_type='video')
+    thumbnail = CloudinaryField(
+        'image', 
+        blank=True, 
+        null=True,
+        public_id_prefix=cl_utils.get_public_id_prefix,
+        display_name=get_display_name,
+        tags=['lesson', 'thumbnail', 'image']
+    )
+    video = CloudinaryField(
+        'video', 
+        blank=True, 
+        null=True, 
+        resource_type='video',
+        public_id_prefix=cl_utils.get_public_id_prefix,
+        display_name=get_display_name,
+        tags=['lesson', 'video'],
+        type="private"
+    )
     preview = models.BooleanField(
         default=False, 
         help_text="True if can be viewed by anyone. Otherwise, false."
@@ -107,6 +123,18 @@ class Lesson(models.Model):
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.public_id == "" or self.public_id is None:
+            self.public_id = cl_utils.generate_public_id(self)
+        super().save(*args, **kwargs)
+
+    @property
+    def path(self):
+        course_path = self.course_foreign.path
+        if course_path.endswith("/"):
+            course_path = course_path[:-1]
+        return f"{course_path}/lessons/{self.public_id}"
 
     # Special class that is recognized by django.
     class Meta:
