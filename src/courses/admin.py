@@ -60,7 +60,7 @@ class CourseAdmin(admin.ModelAdmin):
         # Alternative way to transform images in cloudinary.
         # Make sure the field type of the 'image' field is
         # CloudinaryField.
-        #img = obj.image.image(width=300)
+        # img = obj.image.image(width=300)
 
         #CloudinaryImage returns html syntax
         html_img = CloudinaryImage(cloudinary_id).image(width=300)

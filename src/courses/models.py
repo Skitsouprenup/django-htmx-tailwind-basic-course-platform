@@ -10,7 +10,9 @@ from utils import cloudinary_utils as cl_utils
 class Course(models.Model):
 
     title = models.CharField(max_length=120)
-    public_id = models.CharField(max_length=150, default="", null=True)
+    #this is 'course_id' in the urls.py
+    #'db_index' will create an SQL index to the specified column if true.
+    public_id = models.CharField(max_length=150, default="", null=True, db_index=True)
     # 'blank=True' means this field in a view, can have
     # empty value. 'null=True' means that this field in database,
     # can have null values.
@@ -90,7 +92,9 @@ class Lesson(models.Model):
     #field in this class.
     course_foreign = models.ForeignKey(Course, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
-    public_id = models.CharField(max_length=150, default="", null=True)
+    #this is 'lesson_id' in the urls.py
+    #'db_index' will create an SQL index to the specified column if true.
+    public_id = models.CharField(max_length=150, default="", null=True, db_index=True)
     description = models.TextField(blank=True, null=True)
     thumbnail = CloudinaryField(
         'image', 
