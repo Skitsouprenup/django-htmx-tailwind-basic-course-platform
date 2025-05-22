@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cloudinary-video-player@2.3.5/dist/cld-video-player.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.jsdelivr.net/npm/cloudinary-video-player@2.3.5/dist/cld-video-player.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    function renderVideo(elem, index) {
+        
+        const vidPlayerId = `video-player-${index}`
+        elem.setAttribute("id", vidPlayerId)
+
+        if(vidPlayer) {
+            const cloudName = elem.dataset.cloudName
+            const videoUrl = elem.dataset.videoUrl
+            const cld = cloudinary.videoPlayer(elem, {
+                cloudName
+            })
+            cld.source(videoUrl)
+        }
+    }
+
+    function renderVideos() {
+        const videoPlayers = document.getElementsByClassName('cfe-video')
+        
+        for(let i = 0; i < videoPlayers.length; i++) {
+            renderVideo(videoPlayers.item(i), i)
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderVideos)
+</script>
