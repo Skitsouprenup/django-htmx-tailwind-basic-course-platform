@@ -1,3 +1,4 @@
+import uuid
 from django.template.loader import get_template
 from django.utils import text
 
@@ -5,20 +6,13 @@ import config
 
 def generate_public_id(model):
 
-    if(hasattr(model, 'path')):
-        path = model.path()
-        if(path.startswith("/")):
-            path = path[1:]
-        if(path.endswith("/")):
-            path = path[:-1]
-        return path
-
-    public_id = model.public_id
-    model_name = model.__class__.__name__
-    slug = text.slugify(model_name)
-    if not public_id:
-        return f"{slug}"
-    return f"{slug}/{public_id}"
+    title = model.title
+    unique_id = str(uuid.uuid4()).replace("-", "")
+    if not title:
+        return unique_id
+    slug = text.slugify(title)
+    unique_id_short = unique_id[:5]
+    return f"{slug}-{unique_id_short}"
         
 
 def get_public_id_prefix(model):
@@ -76,11 +70,11 @@ def get_video(
         template_name = "snippets/videos/embed.html"
         template = get_template(template_name)
         cld_name = config.CLOUDINARY_CLOUD_NAME
-        html = template.render({
+        _html = template.render({
             "video_url":url, 
             "cloud_name":cld_name,
             "base_color":"#007cae"
         })
-        return html
+        return _html
 
     return url

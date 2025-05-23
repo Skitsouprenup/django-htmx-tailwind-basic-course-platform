@@ -1,0 +1,10 @@
+<ul class="list-disc">
+    {% for item in queryset %}
+    <li>
+        <a 
+            href="{{item.get_absolute_url}}"
+            class="text-blue-500 hover:underline hover:text-blue-700"
+        >{{item.title}}</a>
+    </li>
+    {% endfor %}
+</ul>

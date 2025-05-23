@@ -2,8 +2,10 @@
 # thrid party cloudinary file
 
 import cloudinary
+# This lets us access key-value pairs in .env
 from decouple import config
 
+#first parameter is the key name in .env
 CLOUDINARY_CLOUD_NAME = config("CLOUDINARY_CLOUD_NAME", default="")
 CLOUDINARY_PUBLIC_KEY = config("CLOUDINARY_PUBLIC_KEY", default="")
 CLOUDINARY_SECRET_KEY = config("CLOUDINARY_SECRET_KEY", default="")

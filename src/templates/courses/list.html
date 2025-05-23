@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<ul class="list-disc">
+    {# published_courses is in a context. Take a look at templates/courses/list.html #}
+    {# This list contains model instances of 'Course' model. #}
+    {% for item in published_courses %}
+    <li>
+        <a 
+            href="{{item.get_absolute_url}}"
+            class="text-blue-500 hover:underline hover:text-blue-700"
+        >{{item.title}}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock content %}

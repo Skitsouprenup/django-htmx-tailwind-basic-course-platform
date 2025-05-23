@@ -1,0 +1,6 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h1>{{ course.title }}</h1>
+{% include 'snippets/list-links.html' with queryset=lessons %}
+{% endblock content %}

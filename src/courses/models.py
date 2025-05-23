@@ -34,7 +34,6 @@ class Course(models.Model):
     #    return f"{filename}"
     #image = models.ImageField(upload_to=img_upload)
 
-    @property
     def get_display_name(self):
         if self.title:
             return self.title
@@ -83,9 +82,8 @@ class Course(models.Model):
 
 class Lesson(models.Model):
 
-    @property
     def get_display_name(self):
-        return f"{self.title} = {self.course_foreign.get_display_name()}"
+        return f"{self.title} - {self.course_foreign.get_display_name()}"
 
     #This variable will generate the 'course_id' column in the
     #database. Thus, you can't use the name to declare a new
@@ -112,7 +110,7 @@ class Lesson(models.Model):
         public_id_prefix=cl_utils.get_public_id_prefix,
         display_name=get_display_name,
         tags=['lesson', 'video'],
-        type="private"
+        #type="private"
     )
     preview = models.BooleanField(
         default=False, 
@@ -138,7 +136,19 @@ class Lesson(models.Model):
         course_path = self.course_foreign.path
         if course_path.endswith("/"):
             course_path = course_path[:-1]
-        return f"{course_path}/lessons/{self.public_id}"
+        return f"{course_path}/lesson/{self.public_id}"
+
+    @property
+    def get_absolute_url(self):
+        return self.path
+
+    @property
+    def is_coming_soon(self):
+        self.status == PublishStatus.SOON
+
+    @property
+    def has_video(self):
+        return self.video is not None
 
     # Special class that is recognized by django.
     class Meta:

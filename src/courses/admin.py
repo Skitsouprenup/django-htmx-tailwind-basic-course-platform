@@ -18,6 +18,8 @@ class LessonInline(admin.StackedInline):
         'image_view',
         'video_view'
     ]
+    # This removes extra form entries of lessons in the admin panel
+    extra = 0
 
     # This function represents the image_view field.
     # 'obj' is the model where this function is assigned.
@@ -29,8 +31,8 @@ class LessonInline(admin.StackedInline):
     image_view.short_description = 'Current Image'
 
     def video_view(self, obj):
-        url = cl_utils.get_video(obj, True, 300, 300)
-        return format_html(f"{url}")
+        video_template = cl_utils.get_video(obj, True, 300, 300)
+        return video_template
     image_view.short_description = 'Current Video'
 
 @admin.register(Course)
