@@ -6,7 +6,7 @@ import config
 subject = "Email Subject"
 body = "This is the body of the text message"
 sender = config.get_email_env("EMAIL_HOST_USER")
-recipients = ["magic.gimick@gmail.com",]
+recipients = ["to@example.com",]
 password = config.get_email_env("EMAIL_HOST_PASSWORD")
 
 
