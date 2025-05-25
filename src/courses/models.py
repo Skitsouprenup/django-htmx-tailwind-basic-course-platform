@@ -139,6 +139,10 @@ class Lesson(models.Model):
         return f"{course_path}/lesson/{self.public_id}"
 
     @property
+    def requires_email(self):
+        return self.course_foreign.access == AccessRequirement.EMAIL_REQUIRED
+
+    @property
     def get_absolute_url(self):
         return self.path
 
