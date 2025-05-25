@@ -1,7 +1,6 @@
 from decouple import config
 
 env_vars = {
-    "EMAIL_ADDRESS": config("EMAIL_ADDRESS", cast=str, default=None),
     "EMAIL_HOST_USER": config("EMAIL_HOST_USER", cast=str, default=None),
     "EMAIL_HOST_PASSWORD": config("EMAIL_HOST_PASSWORD", cast=str, default=None),
     "ADMIN_USER_NAME": config("ADMIN_USER_NAME", default=None),

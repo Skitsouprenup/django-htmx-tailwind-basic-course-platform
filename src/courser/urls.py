@@ -20,10 +20,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from emails import views as email_views
+
 from . import views
 
 urlpatterns = [
     path("", views.home),
+    path("verify/<uuid:token>/", email_views.verify_email_token_view),
     path("courses/", include("courses.urls")),
     path('admin/', admin.site.urls),
 ]
