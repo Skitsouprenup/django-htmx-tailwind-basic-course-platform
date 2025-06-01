@@ -18,6 +18,11 @@ config.cloudinary_init()
 
 ## e-mail settings Overrides ##
 
+# Django email service still won't work in development even if
+# we have these settings. It will raise 'SSLCertVerificationError' error.
+# My workaround here is to create a small SMTP server and it's in the
+# 'smtp_dev_only.py' file.
+
 #default
 #EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
@@ -54,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_htmx',
     'courses',
     'emails'
 ]
@@ -66,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_htmx.middleware.HtmxMiddleware'
 ]
 
 ROOT_URLCONF = 'courser.urls'
@@ -86,7 +93,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'courser.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

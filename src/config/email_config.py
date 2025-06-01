@@ -3,8 +3,6 @@ from decouple import config
 env_vars = {
     "EMAIL_HOST_USER": config("EMAIL_HOST_USER", cast=str, default=None),
     "EMAIL_HOST_PASSWORD": config("EMAIL_HOST_PASSWORD", cast=str, default=None),
-    "ADMIN_USER_NAME": config("ADMIN_USER_NAME", default=None),
-    "ADMIN_USER_EMAIL": config("ADMIN_USER_EMAIL", default=None)
 }
 
 def get_email_env(key):

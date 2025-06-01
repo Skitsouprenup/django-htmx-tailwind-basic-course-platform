@@ -7,7 +7,7 @@
         {% include 'base/js_head.html' %}
         {% block title %}{% endblock title %}
     </head>  
-    <body>
+    <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
         {% block content %}
         {% endblock content %} 
     </body>

@@ -1,11 +1,17 @@
 from .models import Email, EmailVerificationEvent
-from django.core.mail import send_mail
+from courser.smtp_dev_only import send_email
 from django.utils import timezone
 
 import config
 
 def email_not_active(email):
-    inactive_email = Email.objects.get(email=email, active=False)
+    inactive_email = None
+    try:
+        inactive_email = Email.objects.get(email=email, active=False)
+    except Email.DoesNotExist:
+        # It doesn't exist, therefore, we need to create a new
+        # email and make it active
+        inactive_email = False
     return inactive_email
 
 def create_email_verification(email):
@@ -36,19 +42,15 @@ def send_verification_email(verification_id):
 
     subject = "Verify your email"
     
-    email_text = verification_message(verification, True)
+    email_text = verification_message(verification, False)
 
-    sender = config.get_email_env("EMAIL_HOST_USER")
     recipients = [verification.email]
 
     # send an verification email
-    return send_mail(
+    return send_email(
         subject,
         email_text['text'],
-        sender,
         recipients,
-        fail_silently=False,
-        html_message=email_text['html']
     )
 
 def verify_token(token, max_attempts=5):
@@ -59,7 +61,7 @@ def verify_token(token, max_attempts=5):
     
 
     token_expired = event.expired_at
-    if token_expired.exists():
+    if token_expired:
         return False, "Token expired, try again.", None
     
     max_attempts_reached = event.attempts > max_attempts
@@ -75,7 +77,6 @@ def verify_token(token, max_attempts=5):
         event.expired_at = timezone.now()
     event.save()
     ##
-
 
     email_obj = event.parent # Email.objects.get()
     return True, "Welcome", email_obj

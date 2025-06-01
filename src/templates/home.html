@@ -2,3 +2,7 @@
 
 {# this block is overriden from 'base/base.html' #}
 {% block title %}<title>Django Course Platform</title>{% endblock title %}
+
+{% block content %}
+    <div hx-get="/login/" hx-trigger="load"></div>
+{% endblock content %}

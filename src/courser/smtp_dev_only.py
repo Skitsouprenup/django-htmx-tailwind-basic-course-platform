@@ -6,11 +6,10 @@ import config
 subject = "Email Subject"
 body = "This is the body of the text message"
 sender = config.get_email_env("EMAIL_HOST_USER")
-recipients = ["to@example.com",]
 password = config.get_email_env("EMAIL_HOST_PASSWORD")
 
 
-def send_email(subject, body, sender, recipients, password):
+def send_email(subject, body, recipients):
     msg = MIMEText(body)
     msg['Subject'] = subject
     msg['From'] = sender
@@ -19,7 +18,3 @@ def send_email(subject, body, sender, recipients, password):
        smtp_server.login(sender, password)
        smtp_server.sendmail(sender, recipients, msg.as_string())
     print("Message sent!")
-
-
-def send_test_email():
-    send_email(subject, body, sender, recipients, password)

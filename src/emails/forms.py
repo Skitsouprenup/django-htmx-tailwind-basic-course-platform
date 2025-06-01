@@ -18,6 +18,7 @@ class EmailForm(forms.Form):
         )
     )
 
+    # This is called when forms.EmailInput.isvalid() method is called.
     def clean_email(self):
         # cleaned_data returns a dictionary without html tags
         email_input = self.cleaned_data.get("email")

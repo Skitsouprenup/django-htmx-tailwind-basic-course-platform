@@ -25,7 +25,11 @@ from emails import views as email_views
 from . import views
 
 urlpatterns = [
-    path("", email_views.home_view),
+    path("", views.home),
+    # HTMX #
+    path("login/", email_views.email_token_login_view),
+    path('logout/', email_views.logout_btn_view),
+    # ---- #
     path("verify/<uuid:token>/", email_views.verify_email_token_view),
     path("courses/", include("courses.urls")),
     path('admin/', admin.site.urls),
