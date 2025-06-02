@@ -8,6 +8,9 @@ Basic course platform created using Django.
 * Python SMTP
 
 # Technologies Used
+* **HTML**
+* **CSS**
+* **Javascript**
 * **Python**
 * **Django**
 * **Django Template**
@@ -19,11 +22,15 @@ Basic course platform created using Django.
 
 # Environment Variables
 
-**CLOUDINARY_CLOUD_NAME** -> endpoint name. Get this in your cloudinary dashboard.
+**CLOUDINARY_CLOUD_NAME** -> endpoint name. Get this in your cloudinary dashboard.  
+
 **CLOUDINARY_PUBLIC_KEY** -> Get this in your cloudinary dashboard.
+
 **CLOUDINARY_SECRET_KEY** -> Get this in your cloudinary dashboard.
 
+
 **EMAIL_HOST_USER** -> Email address where you created your Google App Password.
+
 **EMAIL_HOST_PASSWORD** -> Google's App Password.
 
 **BASE_URL** -> Domain where your django project is running. Example: `http://localhost:3000`
